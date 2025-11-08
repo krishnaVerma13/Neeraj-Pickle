@@ -1,0 +1,46 @@
+{
+  "dependencies": {
+    "@fontsource/bebas-neue": "^5.2.6",
+    "@fontsource/dancing-script": "^5.2.6",
+    "@fontsource/sacramento": "^5.2.6",
+    "@heroicons/react": "^2.2.0",
+    "@reduxjs/toolkit": "^2.9.0",
+    "axios": "^1.11.0",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.548.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.8.2",
+    "sweetalert2": "^11.26.3",
+    "tailwind-scrollbar-hide": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "daisyui": "^5.1.13",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "postcss": "^8.4.38",
+    "prettier": "^3.3.1",
+    "prettier-plugin-tailwindcss": "^0.6.1",
+    "tailwindcss": "^3.4.4",
+    "vite": "^5.2.0"
+  },
+  "name": "react-vite-tailwind-prettier",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "format": "prettier --write \\\"src/**/*.{js,jsx}\\\""
+  },
+  "type": "module",
+  "version": "0.0.0"
+}
