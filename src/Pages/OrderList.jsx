@@ -40,12 +40,12 @@ function OrderList() {
                                     <div className="flex">
                                         <div>
                                             <div className="">
-                                                <p className="whitespace-nowrap">Aachar (अचार)</p>
+                                                <p className="whitespace-nowrap">Achar (अचार)</p>
 
                                             </div>
                                         </div>
                                         <div className="w-full flex justify-end items-end ">
-                                            <p className=" ">Total: <span className="text-lime-700 font-bold ">Rs.500</span> </p>
+                                            <p className=" ">Total: <span className="text-lime-700 font-bold ">Rs.2700</span> </p>
                                         </div>
 
                                     </div>
@@ -111,12 +111,12 @@ function OrderList() {
                                     <div className="flex">
                                         <div>
                                             <div className="">
-                                                <p className="whitespace-nowrap">Aachar (अचार)</p>
+                                                <p className="whitespace-nowrap">Achar (अचार)</p>
 
                                             </div>
                                         </div>
                                         <div className="w-full flex justify-end items-end ">
-                                            <p className=" ">Total: <span className="text-lime-700 font-bold ">Rs.500</span> </p>
+                                            <p className=" ">Total: <span className="text-lime-700 font-bold ">Rs.2700</span> </p>
                                         </div>
 
                                     </div>
@@ -182,12 +182,12 @@ function OrderList() {
                                     <div className="flex">
                                         <div>
                                             <div className="">
-                                                <p className="whitespace-nowrap">Aachar (अचार)</p>
+                                                <p className="whitespace-nowrap">Achar (अचार)</p>
 
                                             </div>
                                         </div>
                                         <div className="w-full flex justify-end items-end ">
-                                            <p className=" ">Total: <span className="text-lime-700 font-bold ">Rs.500</span> </p>
+                                            <p className=" ">Total: <span className="text-lime-700 font-bold ">Rs.2700</span> </p>
                                         </div>
 
                                     </div>
@@ -226,6 +226,9 @@ function OrderList() {
 
                         </div>
                     </div>
+                </div>
+                <div>
+                    <p className="text-3xl md:m-5 m-2">Total bill : Rs.8100</p>
                 </div>
                 <div className="w-full flex justify-center py-10">
                     <button className="bg-sky-600 text-white font-semibold py-3 w-3/4 rounded-lg">

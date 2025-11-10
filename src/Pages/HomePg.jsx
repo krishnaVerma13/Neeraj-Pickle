@@ -14,7 +14,7 @@ const HomePg = () => {
 
   {/* -------- Product Card Section ------------- */}
   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 justify-items-center">
-    {[...Array(8)].map((_, i) => (
+    {[...Array(20)].map((_, i) => (
       <div
         key={i}
         onClick={() => setDetailCard("open")}
@@ -25,7 +25,7 @@ const HomePg = () => {
         </div>
         <div className="flex-1 flex flex-col justify-between mt-2">
           <div>
-            <p className="text-base font-semibold truncate">Aachar (अचार)</p>
+            <p className="text-base font-semibold truncate">Achar (अचार)</p>
             <p className="text-sm font-light">200gm, 500gm...</p>
           </div>
           <p className="text-right text-base font-bold text-[#32CD32]">Rs.120</p>
@@ -85,6 +85,9 @@ const HomePg = () => {
       </div>
     </div>
   )}
+  <div>
+    <p onClick={()=> navigator('/layout')} className="text-xl bg-red-300 ">Change Layout </p>
+  </div>
 </div>
 
     );

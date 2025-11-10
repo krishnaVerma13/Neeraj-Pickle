@@ -42,7 +42,7 @@ export default function DropdownMenu() {
             </li>
             <li onClick={()=> setIsOpen(false)}>
               <button className="w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-100">
-                Papard
+                Papad
               </button>
             </li>
             <li onClick={()=> setIsOpen(false)}>
