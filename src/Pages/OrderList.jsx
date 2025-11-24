@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import pro2 from '../Assets/productImg/Aachar2.png'
+import pro2 from '../assets/productImg/Aachar2.png'
 
 function OrderList() {
     const [Detail , setDetail] = useState()

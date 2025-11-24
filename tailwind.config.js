@@ -9,9 +9,10 @@ export default {
                 heading: ["Bebas Neue", "sans-serif"],
                 tagline: ["Sacramento", "cursive"],
             },
+        
         },
     },
-    plugins: [require("daisyui","tailwind-scrollbar-hide")],
+    plugins: [require("daisyui", "tailwind-scrollbar-hide")],
     daisyui: {
         themes: ["light", "dark", "cupcake", "fantasy"], // you can choose or add custom themes
     },

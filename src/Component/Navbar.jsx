@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../Assets/logoImg/neerajLogo.png"
+import logo from "../assets/logoImg/neerajLogo.png"
 import DropdownMenu from "./DropdownMenu";
 import { useNavigate } from "react-router-dom";
 
@@ -15,9 +15,9 @@ function Navbar() {
         </div>
     
         {/* Dropdown (Centered for Mobile) */}
-        <div className="text-center flex-1 flex justify-center">
+        {/* <div className="text-center flex-1 flex justify-center">
           <DropdownMenu />
-        </div>
+        </div> */}
     
         <div className="text-end">
           <button
