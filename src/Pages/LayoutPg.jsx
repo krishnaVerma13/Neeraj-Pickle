@@ -1,10 +1,10 @@
 import React from "react";
 import Navbar from "../Component/Navbar";
-import pro2 from "../assets/productImg/Aachar2.png"
-import pro3 from "../assets/productImg/spices.png"
-import pro4 from "../assets/productImg/pasta.png"
-import pro5 from "../assets/productImg/Murabba.png"
-import pro6 from "../assets/productImg/ketchup.png"
+import pro2 from "../Assets/productImg/Aachar2.png"
+import pro3 from "../Assets/productImg/spices.png"
+import pro4 from "../Assets/productImg/pasta.png"
+import pro5 from "../Assets/productImg/Murabba.png"
+import pro6 from "../Assets/productImg/ketchup.png"
 import { useNavigate } from "react-router-dom";
 
 

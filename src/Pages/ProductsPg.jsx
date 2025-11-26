@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import pro1 from "../assets/productImg/Aachar.png"
-import pro2 from "../assets/productImg/Aachar2.png"
+import pro1 from "../Assets/productImg/Aachar.png"
+import pro2 from "../Assets/productImg/Aachar2.png"
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Component/Navbar";
 import getAllProductApi from "../api/AuthAPI/getAllproductApi";
