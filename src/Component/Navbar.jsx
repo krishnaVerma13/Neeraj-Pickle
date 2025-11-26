@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import logo from "../assets/logoImg/neerajLogo.png"
+import logo from "../Assets/logoImg/neerajLogo.png"
 import DropdownMenu from "./DropdownMenu";
 import { useNavigate } from "react-router-dom";
 import getAllProductApi from "../api/AuthAPI/getAllproductApi";
