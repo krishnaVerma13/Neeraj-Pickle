@@ -52,7 +52,8 @@ const ProductsPg = () => {
   // packaging form change
  const handlePackegChange = (index, e) => {
   const { name, value } = e.target;
-console.log(name<" : ",value);
+console.log(name, " : ", value);
+
 
   setOrderPD(prev => {
     // copy current packaging array
@@ -98,6 +99,48 @@ console.log(name<" : ",value);
     }
     getallproduct();
   }, [])
+
+  const handleAddToList = () => {
+  const productToStore = {
+    productId: productdetail._id,
+    name: productdetail.name,
+    image: productdetail.image,
+    packaging: [],
+    totalPrice: OrderPD.totalProductAmount
+  };
+
+  OrderPD.packeging.forEach((p) => {
+    if (p.orderQuentity && Number(p.orderQuentity) > 0) {
+      productToStore.packaging.push({
+        productQuentity: p.productQuentity,
+        orderUnit: p.orderUnit,
+        unitPrice: p.price,
+        orderQuentity: p.orderQuentity,
+        orderPrice: p.orderPrice
+      });
+    }
+  });
+
+  let existing = JSON.parse(localStorage.getItem("cartList")) || [];
+
+  // ----- UPDATE instead of adding duplicate -----
+  const index = existing.findIndex(p => p.productId === productdetail._id);
+
+  if (index !== -1) {
+    existing[index] = productToStore; // replace existing
+  } else {
+    existing.push(productToStore); // add new
+  }
+
+  localStorage.setItem("cartList", JSON.stringify(existing));
+
+  alert("Product list updated!");
+  console.log("Stored product:", productToStore);
+  console.log("Updated cart list:", existing);
+  setDetailCard("close");
+};
+
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col ">
       <div className="w-full overflow-scroll text-nowrap h-10 bg-sky-300 fixed mt-12 flex space-x-4 items-center px-5">
@@ -118,7 +161,49 @@ console.log(name<" : ",value);
         {filteredData.map((value, i) => (
           <div
             key={i}
-            onClick={() => { setDetailCard("open"); setProductDetail(value) }}
+            onClick={() => {
+  setDetailCard("open");
+  setProductDetail(value);
+
+  // ------- Step 1: Read cart list -------
+  const existingCart = JSON.parse(localStorage.getItem("cartList")) || [];
+  const existingProduct = existingCart.find(p => p.productId === value._id);
+
+  // ------- Step 2: If product already exists → prefill values -------
+  if (existingProduct) {
+    setOrderPD({
+      name: value.name,
+      packeging: value.packeging.map((p, i) => {
+        const saved = existingProduct.packaging[i]; // try match index-based
+
+        return {
+          productQuentity: p.productQuentity,
+          price: saved ? saved.unitPrice : p.price,
+          orderUnit: saved ? saved.orderUnit : p.OrderUnit,
+          orderQuentity: saved ? saved.orderQuentity : "",
+          orderPrice: saved ? saved.orderPrice : 0
+        };
+      }),
+      totalProductAmount: existingProduct.totalPrice
+    });
+  }
+
+  // ------- Step 3: If new product → fresh defaults -------
+  else {
+    setOrderPD({
+      name: value.name,
+      packeging: value.packeging.map((p) => ({
+        productQuentity: p.productQuentity,
+        price: p.price,
+        orderUnit: p.OrderUnit,
+        orderQuentity: "",
+        orderPrice: 0
+      })),
+      totalProductAmount: 0
+    });
+  }
+}}
+
             className="w-[160px] sm:w-[180px] h-56 p-3 bg-slate-200 hover:bg-white rounded-2xl hover:shadow-2xl duration-300 cursor-pointer flex flex-col"
           >
             <div className="h-2/3 w-full rounded-2xl overflow-hidden">
@@ -207,9 +292,13 @@ console.log(name<" : ",value);
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 text-white bg-lime-600 hover:bg-lime-700 rounded-xl font-semibold">
-                Add to List
-              </button>
+              <button
+  onClick={handleAddToList}
+  className="px-4 py-2 text-white bg-lime-600 hover:bg-lime-700 rounded-xl font-semibold"
+>
+  Add to List
+</button>
+
             </div>
           </div>
         </div>
