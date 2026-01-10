@@ -7,9 +7,13 @@ import Loader from '../../../Component/Loader';
 import { useQuery } from '@tanstack/react-query'
 import Swal from 'sweetalert2';
 import { HiRefresh } from "react-icons/hi";
+import UpdateImageModal from '../../../Component/UpdateImageModal';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function AllProducts() {
     //   console.log("all product page :",AllProductData);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const queryClient = useQueryClient();
 
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ["product"],
@@ -118,6 +122,39 @@ export default function AllProducts() {
         });
     };
 
+    const handleUpdateSuccess = (updatedProduct) => {
+        console.log('Image updated successfully!', updatedProduct);
+
+        // Update the cache directly
+        queryClient.setQueryData(["product"], (oldData) => {
+            if (!oldData) return oldData;
+
+            return {
+                ...oldData,
+                data: oldData.data.map(product =>
+                    product._id === updatedProduct._id
+                        ? updatedProduct
+                        : product
+                )
+            };
+        });
+
+        // Show success message
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Image Updated Successfully",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            width: "350px"
+        });
+
+        // Close the modal
+        setIsModalOpen(false);
+        setEditProduct(null);
+    };
+
 
 
     useEffect(() => {
@@ -190,12 +227,19 @@ export default function AllProducts() {
                                 <tr key={index} className="border hover:bg-gray-50">
 
                                     {/* IMAGE */}
-                                    <td className="p-2 border">
+                                    <td className="p-2 space-y-2 border">
                                         <img
-                                            src={API_URL + item.image || "loading"}
+                                            src={item.image?.url || "loading"}
                                             alt="Loading...."
                                             className="w-14 h-14 object-cover rounded"
                                         />
+                                        <div>
+                                            <button
+                                                onClick={() => { setIsModalOpen(true); setEditProduct(item); }}
+                                                className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600">
+                                                Update
+                                            </button>
+                                        </div>
                                     </td>
 
                                     {/* PRODUCT NAME */}
@@ -251,6 +295,17 @@ export default function AllProducts() {
                         </tbody>
                     </table>
                 </div>
+
+                {/* ====== Image update Popup ========= */}
+                <UpdateImageModal
+                    isOpen={isModalOpen}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                        setEditProduct(null);
+                    }}
+                    product={editProduct}
+                    onSuccess={handleUpdateSuccess}
+                />
 
                 {editModalOpen && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">

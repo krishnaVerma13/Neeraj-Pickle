@@ -147,7 +147,7 @@ export default function AllOrders() {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, remove it!"
-        }).then(async(result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 Swal.fire({
                     title: "Remove!",
@@ -182,20 +182,20 @@ export default function AllOrders() {
                 <div>
                     <div>
                         <div className='flex text-nowrap'>
-                        <div className='flex items-center text-3xl font-bold text-sky-700 px-3'>
-                            <p>{!ShowOrder ? "#Detail Orders" : "#Customize Order"}</p>
-                        </div>
-                        <div className='w-full flex justify-end py-3 space-x-3'>
-                            <button
-                                onClick={() => setShowOrder(!ShowOrder)}
-                                className='bg-sky-400 px-3 py-1 rounded'>
-                                {ShowOrder ? "Detail Orders" : "Customize Order"}
-                            </button>
-                            <button className='flex' onClick={() => getorder()} >
-                                refresh
-                                <HiRefresh className='text-2xl ' />
-                            </button>
-                        </div>
+                            <div className='flex items-center text-3xl font-bold text-sky-700 px-3'>
+                                <p>{!ShowOrder ? "#Detail Orders" : "#Customize Order"}</p>
+                            </div>
+                            <div className='w-full flex justify-end py-3 space-x-3'>
+                                <button
+                                    onClick={() => setShowOrder(!ShowOrder)}
+                                    className='bg-sky-400 px-3 py-1 rounded'>
+                                    {ShowOrder ? "Detail Orders" : "Customize Order"}
+                                </button>
+                                <button className='flex' onClick={() => getorder()} >
+                                    refresh
+                                    <HiRefresh className='text-2xl ' />
+                                </button>
+                            </div>
                         </div>
                         {ShowOrder ? <div>
                             {/* ------------------- Text Order List ----------- */}
@@ -224,18 +224,16 @@ export default function AllOrders() {
                                                                 </dic>
                                                             </dic>
                                                             <div>
-                                                                 <p className='underline text-lg'>Order Id: <span className='font-semibold underline'>{order.orderId}</span></p>
+                                                                <p className='underline text-lg'>Order Id: <span className='font-semibold underline'>{order.orderId}</span></p>
 
                                                             </div>
                                                         </div>
                                                         <div className="text-right flex items-end h-20">
                                                             <div>
                                                                 <span
-                                                                    className={`px-3 py-1 rounded-lg text-sm font-semibold text-white ${order.orderStatus === "pending"
-                                                                        ? "bg-yellow-600"
-                                                                        : order.orderStatus === "accepted"
-                                                                            ? "bg-green-600"
-                                                                            : "bg-red-600"
+                                                                    className={`px-3 py-1 rounded-lg text-sm font-semibold text-white
+                                                                         ${order.orderStatus === "pending" ? "bg-yellow-600" : 
+                                                                            order.orderStatus === "accept" ? "bg-green-600" : "bg-red-600"
                                                                         }`}
                                                                 >
                                                                     {order.orderStatus?.toUpperCase()}
@@ -269,17 +267,18 @@ export default function AllOrders() {
                                                             </div>
                                                         </div>
                                                     ))}
+                                                    <div>
+                                                        <button
+                                                            onClick={() => DownloadCustomOrderApi(order._id)}
+                                                            className='rounded px-3 py-1 bg-lime-300'
+                                                        >
+                                                            Download
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </AccordionDetails>
                                         </Accordion>
-                                        <div>
-                                            <button
-                                                onClick={() => DownloadCustomOrderApi(order._id)}
-                                                className='rounded px-3 py-1 bg-lime-300'
-                                            >
-                                                Download
-                                            </button>
-                                        </div>
+
 
                                     </div>
                                 </>)
@@ -311,9 +310,9 @@ export default function AllOrders() {
                                                                 </dic>
 
                                                             </dic>
-                                                                <div>
+                                                            <div>
                                                                 <p className='underline text-lg'>Order Id: <span className='font-semibold underline'>{order.orderId}</span></p>
-                                                                </div>
+                                                            </div>
                                                         </div>
 
 

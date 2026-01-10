@@ -123,7 +123,9 @@ export default function AddProduct() {
         data.append("category", formData.category);
         data.append("packeging", JSON.stringify(formData.packeging));
         data.append("product_image", ImageFile);
-
+        
+        console.log("formdata :", data);
+        
         // ------------ API CALL ------------
         const responce = await CreateProductApi(data);
 

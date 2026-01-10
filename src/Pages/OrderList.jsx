@@ -198,7 +198,7 @@ function OrderList() {
                                         <div className="flex">
                                             <div>
                                                 <img
-                                                    src={ API_URL+item?.image || pro2}
+                                                    src={item?.image.url || pro2}
                                                     // src={pro2}
                                                     alt="product"
                                                     className="w-24 h-24 md:w-28 md:h-28 object-cover rounded-lg"

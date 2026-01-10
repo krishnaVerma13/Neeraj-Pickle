@@ -231,7 +231,7 @@ const ProductsPg = () => {
                 className="w-[160px] sm:w-[180px] h-56 p-3 bg-slate-200 hover:bg-white rounded-2xl hover:shadow-2xl duration-300 cursor-pointer flex flex-col"
               >
                 <div className="h-2/3 w-full rounded-2xl overflow-hidden">
-                  <img src={API_URL + value.image} className="w-full h-full object-cover rounded-xl" alt="product" />
+                  <img src={value.image?.url} className="w-full h-full object-cover rounded-xl" alt="product" />
                 </div>
                 <div className="flex-1 flex flex-col justify-between mt-2">
                   <div>
@@ -259,7 +259,7 @@ const ProductsPg = () => {
                 ✕
               </button>
 
-              <img src={API_URL + productdetail.image} className="w-full h-48 object-cover rounded-lg mb-4" alt="product" />
+              <img src={productdetail.image?.url} className="w-full h-48 object-cover rounded-lg mb-4" alt="product" />
               <h2 className="text-xl font-bold mb-3">{productdetail.name}</h2>
 
               {/* Quantity Options */}

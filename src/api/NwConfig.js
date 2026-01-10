@@ -1,5 +1,5 @@
-export const API_URL = "https://neeraj-pickle-backend.onrender.com/"
-// export const API_URL = "https://nakultraders-web-backend.onrender.com/"
+// export const API_URL = "https://neeraj-pickle-backend.onrender.com/"
+export const API_URL = "https://nakultraders-web-backend.onrender.com/"
 // export const API_URL = "http://localhost:7878/"
 // export const API_URL = "http://localhost:5000/"
 
@@ -7,6 +7,7 @@ export const API_URL = "https://neeraj-pickle-backend.onrender.com/"
 export const CreateProduct = "admin/createProduct";
 export const getAllProduct = "admin/getAllProduct"
 export const UpdateProduct = "admin/updateProduct/"
+export const UpdateProductImage = "admin/updateProductImage/"
 export const DeleteProduct = "admin/productDelete/"
 export const CreateOrder = "user/createOrder"
 export const getAllOrder = "admin/getAllOrder"
