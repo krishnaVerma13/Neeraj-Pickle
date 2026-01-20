@@ -205,7 +205,7 @@ export default function AllOrders() {
                                     {ShowOrder ? "Detail Orders" : "Customize Order"}
                                 </button>
                                 <button 
-                                    className='flex items-center gap-1' 
+                                    className='flex items-center gap-1 mt-0' 
                                     onClick={handleRefresh}
                                 >
                                     Refresh
