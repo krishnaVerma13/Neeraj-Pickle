@@ -227,7 +227,7 @@ export default function AllOrders() {
                                             >
                                                 <Typography component="span">
                                                     {/* HEADER */}
-                                                    <div className="flex w-full  justify-between items-start border-b pb-4 mb-4 space-x-10">
+                                                    <div className="flex w-full mt-0 justify-between items-start border-b pb-4 mb-4 space-x-10">
                                                         <div>
                                                             <h2 className="text-2xl font-bold text-gray-800">{order.firmName}</h2>
                                                             <div className="flex space-x-10 ">
