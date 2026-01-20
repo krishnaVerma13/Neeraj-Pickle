@@ -7,7 +7,7 @@ export default function Sidebar({ collapsed, onNavigate, active, onClose }) {
         { id: 'products_all', label: 'All Products' },
         { id: 'products_add', label: 'Add Product' },
         { id: 'orders_all', label: 'All Orders' },
-        { id: 'orders_manage', label: 'Manage Orders' },
+        // { id: '/', label: ':-> Go to Website' },
     ]
 
 

@@ -21,7 +21,7 @@ function CustomizeOrderPG() {
 
     setOrderText("");
   };
-  console.log("orders :",orders);
+  // console.log("orders :",orders);
   
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">

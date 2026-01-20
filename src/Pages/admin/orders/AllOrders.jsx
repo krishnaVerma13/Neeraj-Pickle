@@ -20,63 +20,83 @@ import DownloadSingleOrderApi from '../../../api/AuthAPI/DownloadSingleOrderApi'
 import DownloadCustomOrderApi from '../../../api/AuthAPI/DownloadCustomOrderApi';
 
 import Swal from 'sweetalert2';
+import { useQuery } from '@tanstack/react-query';
+
+import {  useEffect } from 'react';
 
 export default function AllOrders() {
-    const [loading, setLoading] = useState(false); // Login on\off
-    const [AllOrders, setAllOrders] = useState() //Store all Order data
-    const [ShowOrder, setShowOrder] = useState(false) // show customize data on\off
-    const [OrderText, setOrderText] = useState()
+    const [loading, setLoading] = useState(false);
+    const [AllOrders, setAllOrders] = useState([]);
+    const [ShowOrder, setShowOrder] = useState(false);
+    const [OrderText, setOrderText] = useState([]);
+
+    const { data: orderData, isLoading: orderDataLoading, error: orderError, refetch: orderRefetch } = useQuery({
+        queryKey: ["order"],
+        queryFn: getAllOrderApi,
+        staleTime: 20 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false
+    });
+    
+    const { data: custOrderData, isLoading: custOrderDataLoading, error: custOrderError, refetch: custOrderRefetch } = useQuery({
+        queryKey: ["customOrder"],
+        queryFn: getAllCustomizeOrderApi,
+        staleTime: 20 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false
+    });
 
     const getorder = async () => {
-        setLoading(true)
-        const data = await getAllOrderApi()
-        console.log("all orders :", data.data);
-        setAllOrders(data.data)
+        setLoading(true);
+        
+        const orderdata = await orderData;
+        const customizeData = await custOrderData;
 
-        const customizeData = await getAllCustomizeOrderApi()
-        if (!customizeData) {
-
+        if (!orderData || !customizeData) {
+            setLoading(false);
             return Swal.fire({
                 icon: "error",
                 title: "Network error",
                 text: "Customize data not found",
-
             });
         }
-        setOrderText(customizeData.data)
-        console.log("customize data :", customizeData.data);
+        setAllOrders(orderdata.data);
+        setOrderText(customizeData.data);
+        setLoading(false);
+    };
 
-        setLoading(false)
-    }
+    const handleRefresh = async () => {
+        setLoading(true);
+        try {
+            if (ShowOrder) {
+                await custOrderRefetch();
+            } else {
+                await orderRefetch();
+            }
+        } catch (error) {
+            console.error("Refresh failed:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const UpdateState = async (id, state, index) => {
         try {
-            console.log("updating status:", state, "id:", id, "index:", index);
             const payload = { orderStatus: state };
-
-            const res = await updateOrderStatusApi(id, payload); // axios or fetch wrapper
-
-            // Normalize the updated order from response (works for many response shapes)
+            const res = await updateOrderStatusApi(id, payload);
             const updatedOrder = res?.data?.data ?? res?.data ?? res;
-            console.log("api returned:", updatedOrder);
-
-            // 1) Update state by matching id (recommended — index may be unreliable)
             setAllOrders(prev => prev.map(item => (item._id === id ? updatedOrder : item)));
         } catch (err) {
             console.error("update failed", err);
-            alert("");
             Swal.fire({
                 icon: "error",
                 title: "Network error",
                 text: "Could not update order status. Try again.",
-
             });
         }
     };
 
     const DeleteOrder = async (id, index) => {
-        console.log("id : ", id);
-
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -89,7 +109,7 @@ export default function AllOrders() {
             if (result.isConfirmed) {
                 Swal.fire({
                     title: "Remove!",
-                    text: "Product has been removed .",
+                    text: "Product has been removed.",
                     icon: "success",
                     showConfirmButton: false,
                     timer: 1500
@@ -100,30 +120,18 @@ export default function AllOrders() {
                         icon: "error",
                         title: "Network error",
                         text: "Something went wrong!",
-
                     });
                 }
-
-                // 🔥 Remove item from AllOrders in UI
                 setAllOrders(prev => prev.filter((order) => order._id !== id));
             }
-        })
+        });
     };
 
-
-    // ================ Customize Order ==========================
     const custUpdateState = async (id, state, index) => {
         try {
-            console.log("updating status:", state, "id:", id, "index:", index);
             const payload = { orderStatus: state };
-
-            const res = await UpdateCustomizeOrderStateApi(id, payload); // axios or fetch wrapper
-
-            // console.log("api returned:", res);
-            // Normalize the updated order from response (works for many response shapes)
+            const res = await UpdateCustomizeOrderStateApi(id, payload);
             const updatedOrder = res?.data;
-
-            // // 1) Update state by matching id (recommended — index may be unreliable)
             setOrderText(prev => prev.map(item => (item._id === id ? updatedOrder : item)));
         } catch (err) {
             console.error("update failed", err);
@@ -131,14 +139,11 @@ export default function AllOrders() {
                 icon: "error",
                 title: "Network error",
                 text: "Could not update order status. Try again.",
-
             });
         }
     };
 
-
     const custDeleteOrder = async (id, index) => {
-        // console.log("id : ", id);
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -151,7 +156,7 @@ export default function AllOrders() {
             if (result.isConfirmed) {
                 Swal.fire({
                     title: "Remove!",
-                    text: "Product has been removed .",
+                    text: "Product has been removed.",
                     icon: "success",
                     showConfirmButton: false,
                     timer: 1500
@@ -160,23 +165,31 @@ export default function AllOrders() {
                 if (!deleteRes) {
                     return alert("Something went wrong!");
                 }
-                // 🔥 Remove item from AllOrders in UI
                 setOrderText(prev => prev.filter((order) => order._id !== id));
             }
         });
     };
 
+    // Fixed: Changed useState to useEffect
+    useEffect(() => {
+        getorder();
+    }, []);
 
-    useState(() => {
+    // Update data when refetch completes
+    useEffect(() => {
+        if (orderData?.data) {
+            setAllOrders(orderData.data);
+        }
+    }, [orderData]);
 
-        getorder()
-    }, [])
-
-
+    useEffect(() => {
+        if (custOrderData?.data) {
+            setOrderText(custOrderData.data);
+        }
+    }, [custOrderData]);
 
     return (
         <div className="bg-white rounded shadow p-4">
-            {/* <OrderTable orders={orders} /> */}
             {loading && <Loader />}
             {!loading && (
                 <div>
@@ -191,12 +204,16 @@ export default function AllOrders() {
                                     className='bg-sky-400 px-3 py-1 rounded'>
                                     {ShowOrder ? "Detail Orders" : "Customize Order"}
                                 </button>
-                                <button className='flex' onClick={() => getorder()} >
-                                    refresh
-                                    <HiRefresh className='text-2xl ' />
+                                <button 
+                                    className='flex items-center gap-1' 
+                                    onClick={handleRefresh}
+                                >
+                                    Refresh
+                                    <HiRefresh className='text-2xl' />
                                 </button>
                             </div>
                         </div>
+                   
                         {ShowOrder ? <div>
                             {/* ------------------- Text Order List ----------- */}
                             {OrderText?.slice().reverse().map((order, index) => {
@@ -213,16 +230,16 @@ export default function AllOrders() {
                                                     <div className="flex w-full  justify-between items-start border-b pb-4 mb-4 space-x-10">
                                                         <div>
                                                             <h2 className="text-2xl font-bold text-gray-800">{order.firmName}</h2>
-                                                            <dic className="flex space-x-10 ">
+                                                            <div className="flex space-x-10 ">
                                                                 <div>
                                                                     <p className="text-sm text-gray-500">City: {order.city}</p>
                                                                     <p className="text-sm text-gray-500">Phone: {order.phoneNo}</p>
                                                                 </div>
-                                                                <dic>
+                                                                <div>
                                                                     <p className="text-sm text-gray-500">GST: {order.GST}</p>
                                                                     <p className="text-sm text-gray-500">Transportation: {order.transportation}</p>
-                                                                </dic>
-                                                            </dic>
+                                                                </div>
+                                                            </div>
                                                             <div>
                                                                 <p className='underline text-lg'>Order Id: <span className='font-semibold underline'>{order.orderId}</span></p>
 
@@ -232,7 +249,7 @@ export default function AllOrders() {
                                                             <div>
                                                                 <span
                                                                     className={`px-3 py-1 rounded-lg text-sm font-semibold text-white
-                                                                         ${order.orderStatus === "pending" ? "bg-yellow-600" : 
+                                                                         ${order.orderStatus === "pending" ? "bg-yellow-600" :
                                                                             order.orderStatus === "accept" ? "bg-green-600" : "bg-red-600"
                                                                         }`}
                                                                 >
@@ -241,15 +258,23 @@ export default function AllOrders() {
                                                             </div>
                                                         </div>
                                                         <div className='md:space-x-2 space-y-2 w-full md:space-y-0 md:flex justify-end'>
-                                                            <button className='px-2 py-1 bg-lime-300 rounded text-xs'
-                                                                onClick={() => custUpdateState(order._id, "accept", index)}
-                                                            >Accept</button>
-                                                            <button
-                                                                onClick={() => custUpdateState(order._id, "reject", index)}
-                                                                className='px-2 py-1 bg-red-400 rounded text-xs'>Reject</button>
-                                                            <button
-                                                                onClick={() => custDeleteOrder(order._id, index)}
-                                                                className='px-2 py-1 bg-red-600 rounded text-xs'>Delete</button>
+                                                            <div
+                                                                role="button"
+                                                                tabIndex={0}
+                                                                className='px-2 py-1 bg-lime-300 rounded text-xs'
+                                                                onClick={(e) => { e.stopPropagation(); custUpdateState(order._id, "accept", index) }}
+                                                            >Accept
+                                                            </div>
+                                                            <div
+                                                                role="button"
+                                                                tabIndex={0}
+                                                                onClick={(e) => { e.stopPropagation(); custUpdateState(order._id, "reject", index) }}
+                                                                className='px-2 py-1 bg-red-400 rounded text-xs'>Reject</div>
+                                                            <div
+                                                                role="button"
+                                                                tabIndex={0}
+                                                                onClick={(e) => { e.stopPropagation(); custDeleteOrder(order._id, index) }}
+                                                                className='px-2 py-1 bg-red-600 rounded text-xs'>Delete</div>
                                                         </div>
                                                     </div>
                                                 </Typography>
@@ -268,12 +293,14 @@ export default function AllOrders() {
                                                         </div>
                                                     ))}
                                                     <div>
-                                                        <button
-                                                            onClick={() => DownloadCustomOrderApi(order._id)}
+                                                        <div
+                                                            role="button"
+                                                            tabIndex={0}
+                                                            onClick={(e) => { e.stopPropagation(); DownloadCustomOrderApi(order._id) }}
                                                             className='rounded px-3 py-1 bg-lime-300'
                                                         >
                                                             Download
-                                                        </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </AccordionDetails>
@@ -299,17 +326,17 @@ export default function AllOrders() {
                                                     <div className="flex w-full  justify-between items-start border-b pb-4 mb-4 space-x-10">
                                                         <div>
                                                             <h2 className="text-2xl font-bold text-gray-800">{order.firmName}</h2>
-                                                            <dic className="flex space-x-10 ">
+                                                            <div className="flex space-x-10 ">
                                                                 <div>
                                                                     <p className="text-sm text-gray-500">City: {order.city}</p>
                                                                     <p className="text-sm text-gray-500">Phone: {order.phoneNo}</p>
                                                                 </div>
-                                                                <dic>
+                                                            <div>
                                                                     <p className="text-sm text-gray-500">GST: {order.GST}</p>
                                                                     <p className="text-sm text-gray-500">Transportation: {order.transportation}</p>
-                                                                </dic>
+                                                                </div>
 
-                                                            </dic>
+                                                            </div>
                                                             <div>
                                                                 <p className='underline text-lg'>Order Id: <span className='font-semibold underline'>{order.orderId}</span></p>
                                                             </div>
@@ -336,15 +363,23 @@ export default function AllOrders() {
                                                             </div>
                                                         </div>
                                                         <div className='md:space-x-2 space-y-2 w-full md:space-y-0 md:flex justify-end'>
-                                                            <button className='px-2 py-1 bg-lime-300 rounded text-xs'
-                                                                onClick={() => UpdateState(order._id, "accept", index)}
-                                                            >Accept</button>
-                                                            <button
-                                                                onClick={() => UpdateState(order._id, "reject", index)}
-                                                                className='px-2 py-1 bg-red-400 rounded text-xs'>Reject</button>
-                                                            <button
-                                                                onClick={() => DeleteOrder(order._id, index)}
-                                                                className='px-2 py-1 bg-red-600 rounded text-xs'>Delete</button>
+                                                            <div
+                                                                role="button"
+                                                                tabIndex={0}
+                                                                className='px-2 py-1 bg-lime-300 rounded text-xs'
+                                                                onClick={(e) => { e.stopPropagation(); UpdateState(order._id, "accept", index) }}
+                                                            >Accept
+                                                            </div>
+                                                            <div
+                                                                role="button"
+                                                                tabIndex={0}
+                                                                onClick={(e) => { e.stopPropagation(); UpdateState(order._id, "reject", index) }}
+                                                                className='px-2 py-1 bg-red-400 rounded text-xs'>Reject</div>
+                                                            <div
+                                                                role="button"
+                                                                tabIndex={0}
+                                                                onClick={(e) => { e.stopPropagation(); DeleteOrder(order._id, index) }}
+                                                                className='px-2 py-1 bg-red-600 rounded text-xs'>Delete</div>
                                                         </div>
                                                     </div>
                                                 </Typography>
@@ -352,67 +387,73 @@ export default function AllOrders() {
                                             <AccordionDetails>
                                                 {/* PRODUCT DETAILS */}
                                                 <div className="space-y-6">
-                                                    {order.productOrders.map((product) => (
-                                                        <div
-                                                            key={product._id}
-                                                            className="border rounded-lg p-4 shadow-sm bg-gray-50"
-                                                        >
+                                                    {order.productOrders.length == 0 ? <div> <p className='text-3xl'>User Not add product ??</p></div> :
+                                                        <div>
+                                                            {order?.productOrders?.map((product) => (
+                                                                <div
+                                                                    key={product._id}
+                                                                    className="border rounded-lg p-4 shadow-sm bg-gray-50"
+                                                                >
 
-                                                            <div className="flex gap-4 items-center">
-                                                                {/* <img
+                                                                    <div className="flex gap-4 items-center">
+                                                                        {/* <img
                                                     src={product.image}
                                                     alt=""
                                                     className="w-20 h-20 rounded-lg border object-cover"
                                                     /> */}
 
-                                                                <div>
-                                                                    <h3 className="text-2xl font-semibold text-gray-700">
-                                                                        {product.name}
-                                                                    </h3>
+                                                                        <div>
+                                                                            <h3 className="text-2xl font-semibold text-gray-700">
+                                                                                {product.name}
+                                                                            </h3>
+
+                                                                        </div>
+
+                                                                        <div className="ml-auto text-right">
+                                                                            <p className="font-semibold text-lg text-gray-700">
+                                                                                Subtotal: ₹{product.totalPrice}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* PACKAGING TABLE */}
+                                                                    <table className="w-full mt-4 text-sm border rounded-lg overflow-hidden">
+                                                                        <thead className="bg-gray-200 text-gray-700">
+                                                                            <tr>
+                                                                                <th className="p-2 border">Qty</th>
+                                                                                <th className="p-2 border">Price</th>
+                                                                                <th className="p-2 border">Unit</th>
+                                                                                <th className="p-2 border">Order Qty</th>
+                                                                                <th className="p-2 border">Total</th>
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+                                                                            {product.packaging.map((pk, index) => (
+                                                                                <tr key={index} className="text-center bg-white">
+                                                                                    <td className="p-2 border">{pk.productQuentity}</td>
+                                                                                    <td className="p-2 border">₹{pk.unitPrice}</td>
+                                                                                    <td className="p-2 border">{pk.orderUnit}</td>
+                                                                                    <td className="p-2 border">{pk.orderQuentity}</td>
+                                                                                    <td className="p-2 border font-semibold">₹{pk.orderPrice}</td>
+                                                                                </tr>
+                                                                            ))}
+                                                                        </tbody>
+                                                                    </table>
 
                                                                 </div>
-
-                                                                <div className="ml-auto text-right">
-                                                                    <p className="font-semibold text-lg text-gray-700">
-                                                                        Subtotal: ₹{product.totalPrice}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-
-                                                            {/* PACKAGING TABLE */}
-                                                            <table className="w-full mt-4 text-sm border rounded-lg overflow-hidden">
-                                                                <thead className="bg-gray-200 text-gray-700">
-                                                                    <tr>
-                                                                        <th className="p-2 border">Qty</th>
-                                                                        <th className="p-2 border">Price</th>
-                                                                        <th className="p-2 border">Unit</th>
-                                                                        <th className="p-2 border">Order Qty</th>
-                                                                        <th className="p-2 border">Total</th>
-                                                                    </tr>
-                                                                </thead>
-
-                                                                <tbody>
-                                                                    {product.packaging.map((pk, index) => (
-                                                                        <tr key={index} className="text-center bg-white">
-                                                                            <td className="p-2 border">{pk.productQuentity}</td>
-                                                                            <td className="p-2 border">₹{pk.unitPrice}</td>
-                                                                            <td className="p-2 border">{pk.orderUnit}</td>
-                                                                            <td className="p-2 border">{pk.orderQuentity}</td>
-                                                                            <td className="p-2 border font-semibold">₹{pk.orderPrice}</td>
-                                                                        </tr>
-                                                                    ))}
-                                                                </tbody>
-                                                            </table>
-
+                                                            ))}
                                                         </div>
-                                                    ))}
+                                                    }
                                                     <div>
-                                                        <button
-                                                            onClick={() => DownloadSingleOrderApi(order._id)}
+                                                        <div
+                                                            role="button"
+                                                            tabIndex={0}
+                                                            onClick={(e) => { e.stopPropagation(); DownloadSingleOrderApi(order._id) }}
                                                             className='rounded px-3 py-1 bg-lime-300'
                                                         >
                                                             Download
-                                                        </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </AccordionDetails>

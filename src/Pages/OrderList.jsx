@@ -67,8 +67,8 @@ function OrderList() {
         // Save back to localStorage
         localStorage.setItem("cartList", JSON.stringify(existing));
 
-        console.log("Saved Product:", productToStore);
-        console.log("Updated Cart:", existing);
+        // console.log("Saved Product:", productToStore);
+        console.log("Updated Cart:");
         getOrderList();
         setDetailCard("close");
     };
@@ -134,14 +134,14 @@ function OrderList() {
                     timer: 1500
                 });
 
-                console.log("id :", id);
+                // console.log("id :", id);
 
                 const stored = JSON.parse(localStorage.getItem("cartList")) || [];
-                console.log("card list store :", stored);
+                // console.log("card list store :", stored);
 
                 // filter out the item
                 const updated = stored.filter(item => item.productId !== id);
-                console.log("update store :", updated);
+                console.log("update store ");
 
                 // save updated data back
                 localStorage.setItem("cartList", JSON.stringify(updated));
@@ -163,7 +163,7 @@ function OrderList() {
     const getOrderList = () => {
         setLoading(true)
         const cartList = JSON.parse(localStorage.getItem("cartList")) || [];
-        console.log(cartList);
+        // console.log(cartList);
         setOrderPL(cartList)
         calculatebill(cartList)
         setLoading(false)
@@ -190,9 +190,13 @@ function OrderList() {
                         {OrderPL?.map((item, index) => {
 
                             return (<>
-                                < div className="w-full md:w-2/3 flex flex-col md:flex-row bg-slate-100 rounded-lg overflow-hidden shadow-md border border-gray-200">
+                                < div
+                                key={index}
+                                className="w-full md:w-2/3 flex flex-col md:flex-row bg-slate-100 rounded-lg overflow-hidden shadow-md border border-gray-200">
                                     {/* Right Table Section */}
-                                    <div key={index} className="w-full   bg-lime-50 p-2">
+                                    <div 
+                                    // key={index} 
+                                    className="w-full   bg-lime-50 p-2">
 
                                         {/* ------- Image and Button ---------------- */}
                                         <div className="flex">
@@ -281,11 +285,19 @@ function OrderList() {
                     </div>}
 
                     <div className="w-full flex justify-center py-10">
+                       {TotalBill == 0 ? 
+                        <button
+                            onClick={() => navigator('/')}
+                            className="bg-sky-600 text-white font-semibold py-3 w-3/4 rounded-lg">
+                            Goto Home page 
+                        </button>
+                        :
                         <button
                             onClick={() => navigator('/orderForm', { state: { TotalBill: TotalBill } })}
                             className="bg-sky-600 text-white font-semibold py-3 w-3/4 rounded-lg">
                             Order
                         </button>
+                        }
                     </div>
 
                     {DetailCard === "open" && (

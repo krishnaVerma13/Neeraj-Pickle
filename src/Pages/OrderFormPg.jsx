@@ -47,7 +47,7 @@ export default function OrderFormPg() {
     useEffect(() => {
         window.scrollTo(0, 0)
         const savedData = JSON.parse(localStorage.getItem("cartList"));
-        console.log(savedData);
+        // console.log(savedData);
 
         if (savedData) {
             setLocalData(savedData);
@@ -113,9 +113,9 @@ export default function OrderFormPg() {
         // if(loading) return;
         e.preventDefault();
         setLoading(true)
-        console.log("local data :", localData);
-        console.log("form data :", formData);
-        console.log("Total bill :", TotalBill);
+        // console.log("local data :", localData);
+        // console.log("form data :", formData);
+        // console.log("Total bill :", TotalBill);
 
         const lastbill = {
             firmName: formData.Name,
@@ -127,10 +127,10 @@ export default function OrderFormPg() {
             productOrders: localData,
             totalBill: TotalBill
         };
-        console.log("last bill", lastbill);
+        // console.log("last bill", lastbill);
 
         const resp = await CreateOrderApi(lastbill);
-        console.log("responce :", resp);
+        // console.log("responce :", resp);
 
         if (!resp.data) {
             return Swal.fire({
@@ -222,8 +222,8 @@ export default function OrderFormPg() {
         // if(loading) return;
         e.preventDefault();
         setLoading(true)
-        console.log("form data :", formData);
-        console.log("text Order :", AllTextOrder);
+        // console.log("form data :", formData);
+        // console.log("text Order :", AllTextOrder);
 
         const lastbill = {
             firmName: formData.Name,
@@ -252,7 +252,7 @@ export default function OrderFormPg() {
 
         // open whatsApp on onClick
     const openWhatsApp = () => {
-        console.log("order detail alert ====== :",resp.data);
+        // console.log("order detail alert ====== :",resp.data);
 
         const phoneNumber = "919407391999"; // country code + number
         const message = `

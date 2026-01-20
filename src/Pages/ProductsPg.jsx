@@ -55,7 +55,7 @@ const ProductsPg = () => {
   // packaging form change
   const handlePackegChange = (index, e) => {
     const { name, value } = e.target;
-    console.log(name, " : ", value);
+    // console.log(name, " : ", value);
 
 
     setOrderPD(prev => {
@@ -72,8 +72,8 @@ const ProductsPg = () => {
       let orderQuentity = name === "orderQuentity" ? Number(value) : Number(updatedPack[index].orderQuentity || 0);
       let price = unit === "BOX" ? Number(product.bpPrice) : Number(product.price);
       let orderPrice = orderQuentity ? price * orderQuentity : 0;
-      console.log("orderQuentity : ", orderQuentity);
-      console.log("price :", price);
+      // console.log("orderQuentity : ", orderQuentity);
+      // console.log("price :", price);
 
 
 
@@ -102,7 +102,7 @@ const ProductsPg = () => {
     async function getallproduct() {
       setLoading(true)
       const alldata = await getAllProductApi()
-      console.log("all product data :", alldata.data);
+      // console.log("all product data :", alldata.data);
       if (!alldata) (
         alert('product data not get !!')
       )
@@ -156,19 +156,21 @@ const ProductsPg = () => {
       toast: true,
       width: "350px"
     });
-    console.log("Stored product:", productToStore);
-    console.log("Updated cart list:", existing);
+    // console.log("Stored product:", productToStore);
+    console.log("product add to list");
+    // console.log("Updated cart list:", existing);
+    console.log("Updated cart list:");
     setDetailCard("close");
   };
 
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col ">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="w-full overflow-scroll text-nowrap h-10 bg-sky-300 fixed mt-12 flex space-x-4 items-center px-5">
         <p onClick={() => setCategoryFilter('achar')} className="font-semibold hover:underline hover:cursor-pointer uppercase" >Achar |</p>
         <p onClick={() => setCategoryFilter('noodles')} className="font-semibold hover:underline hover:cursor-pointer uppercase" >noodels |</p>
         <p onClick={() => setCategoryFilter('figure fryums')} className="font-semibold hover:underline hover:cursor-pointer uppercase" >figure fryums |</p>
-        <p onClick={() => setCategoryFilter('imported fryums')} className="font-semibold hover:underline hover:cursor-pointer uppercase" >imported fruyms |</p>
+        <p onClick={() => setCategoryFilter('imported fryums')} className="font-semibold hover:underline hover:cursor-pointer uppercase" >imported fryums |</p>
         <p onClick={() => setCategoryFilter('fry papad')} className="font-semibold hover:underline hover:cursor-pointer uppercase" >fry papad |</p>
         <p onClick={() => setCategoryFilter('rice papad')} className="font-semibold hover:underline hover:cursor-pointer uppercase" >rice papad |</p>
         <p onClick={() => setCategoryFilter('papad')} className="font-semibold hover:underline hover:cursor-pointer uppercase" >papad |</p>

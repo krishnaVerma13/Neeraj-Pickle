@@ -23,10 +23,10 @@ export default function AllProducts() {
         refetchOnMount: false
     })
     const AllProductData = data?.data;
-    console.log("allProduct page : ", AllProductData);
+    // console.log("allProduct page : ", AllProductData);
 
     const [loading, setLoading] = useState(isLoading);
-    console.log("loading :", isLoading);
+    // console.log("loading :", isLoading);
 
 
 
@@ -49,14 +49,14 @@ export default function AllProducts() {
         return matchesSearch && matchesCategory;
     });
 
-    console.log("filter data :", filteredData);
+    // console.log("filter data :", filteredData);
     const [Productdata, setProductdata] = useState(filteredData)
 
     // const [Productdata, setProductdata] = useState(AllProductData)
 
     //Handel update!!
     const handleUpdateSubmit = async (updatedProduct) => {
-        console.log("Updated Data:", updatedProduct);
+        // console.log("Updated Data:", updatedProduct);
         try {
             const updatedata = await UpdateProductApi(updatedProduct._id, updatedProduct)
 
@@ -103,11 +103,11 @@ export default function AllProducts() {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                console.log("Product id:", pro);
-                console.log("Product index:", index);
+                // console.log("Product id:", pro);
+                // console.log("Product index:", index);
                 try {
                     const deletepro = await DeleteProductApi(pro)
-                    console.log(deletepro);
+                    // console.log(deletepro);
 
                     if (!deletepro) {
                         alert('sonthing wents wrong !!')
@@ -123,7 +123,7 @@ export default function AllProducts() {
     };
 
     const handleUpdateSuccess = (updatedProduct) => {
-        console.log('Image updated successfully!', updatedProduct);
+        // console.log('Image updated successfully!', updatedProduct);
 
         // Update the cache directly
         queryClient.setQueryData(["product"], (oldData) => {

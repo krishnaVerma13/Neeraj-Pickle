@@ -56,10 +56,10 @@ export default function AdminApp() {
 
 
     function renderContent() {
-        if (active === 'dashboard') return <Dashboard products={products} orders={orders} stats={stats}  /> //AllProductData={AllProductData?.length}
+        if (active === 'dashboard') return <Dashboard /> //AllProductData={AllProductData?.length}
         if (active === 'products_add') return <AddProduct />
         if (active === 'products_all') return <AllProducts  /> //AllProductData={AllProductData}
-        if (active === 'orders_all' || active === 'orders_manage') return <AllOrders orders={orders} onManage={(id) => setModal({ open: true, title: `Manage ${id}`, content: <ManageOrders orderId={id} orders={orders} onChangeStatus={changeOrderStatus} /> })} />
+        if (active === 'orders_all' || active === 'orders_manage') return <AllOrders  />
         return <div>Not Found</div>
     }
 
@@ -80,7 +80,7 @@ export default function AdminApp() {
             <Modal open={modal.open} title={modal.title} onClose={() => setModal({ open: false })}>{modal.content}</Modal>
 
 
-            <Toasts toasts={toasts} />
+            {/* <Toasts toasts={toasts} /> */}
         </div>
     )
 }

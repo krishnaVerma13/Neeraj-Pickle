@@ -32,9 +32,23 @@ export default function AdminLogin() {
 
     if (!validate()) return;
 
-    // no backend, so just simulate login
-    // alert("Login Successful (Static Demo)");
-    window.location.href = "/admindashboard";
+    // Admin credentials (in real app, this would be API call)
+    const ADMIN_EMAIL = "nakultradersindore9@gmail.com";
+    const ADMIN_PASSWORD = "NT@9827791999";
+
+    if (form.email === ADMIN_EMAIL && form.password === ADMIN_PASSWORD) {
+      console.log("Login successful!");
+      // Redirect to admin dashboard
+      window.location.href = "/admindashboard";
+    } else {
+      // let err = "Invalid email or password"
+      setErrors({
+        general: "Invalid email or password"
+      });
+    }
+
+    ;
+    // window.location.href = "/admindashboard";
   };
 
   useEffect(() => {
@@ -93,6 +107,12 @@ export default function AdminLogin() {
             </div>
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+            {/* General Error */}
+            {errors.general && (
+              <div className="text-red-500 text-sm mt-1">
+                {errors.general}
+              </div>
             )}
           </div>
 
