@@ -209,7 +209,7 @@ export default function AllOrders() {
                                     onClick={handleRefresh}
                                 >
                                     Refresh
-                                    <HiRefresh className='text-2xl' />
+                                    <HiRefresh className='text-2xl mt-0' />
                                 </button>
                             </div>
                         </div>
